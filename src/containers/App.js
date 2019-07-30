@@ -7,6 +7,7 @@ import ItemsList from '../components/ItemsList';
 import FilterBar from '../components/FilterBar';
 
 import { AppContextProvider } from '../context/AppContext';
+import SortBar from '../components/SortBar.js';
 
 class App extends Component {
   state = {
@@ -22,7 +23,8 @@ class App extends Component {
         to: 'all'
       },
       favorites: 'all'
-    }
+    },
+    sorting: 'popularity'
   }
   setFilter = filter => {
     this.setState({
@@ -30,6 +32,9 @@ class App extends Component {
         [filter.name] : filter.value
       })
     });
+  }
+  setSorting = sorting => {
+    this.setState({ sorting });
   }
   fetchData(url) {
     return axios.get(url)
@@ -52,6 +57,16 @@ class App extends Component {
     });
     this.setState({ filteredProducts });
   }
+  sortProducts() {
+    const { sorting, products } = this.state;
+    let sortedProducts = products.slice(0);
+    sortedProducts.sort((a, b) => {
+      return sorting === 'price' ? a.price - b.price : a.id - b.id;
+    });
+    this.setState({
+      products: sortedProducts
+    });
+  }
   componentDidMount() {
     const fetchProducts = this.fetchData(urlProducts);
     const fetchSellers = this.fetchData(urlSellers);
@@ -72,14 +87,19 @@ class App extends Component {
       });
   }
   componentDidUpdate(_, prevState) {
-    if (prevState.filters !== this.state.filters) {
+    const { products, filters, sorting } = this.state;
+    if (prevState.filters !== filters || prevState.products !== products) {
       this.filterProducts();
+    }
+    if (prevState.sorting !== sorting) {
+      this.sortProducts();
     }
   }
   render() {
     const { products, sellers, loading, error, filteredProducts } = this.state;
     const filterContext = {
-      setFilter: this.setFilter
+      setFilter: this.setFilter,
+      setSorting: this.setSorting
     };
     return (
       <div className="App">
@@ -91,8 +111,9 @@ class App extends Component {
               <>
                 <AppContextProvider value={filterContext}>
                   <FilterBar />
+                  <SortBar />
                 </AppContextProvider>
-                <ItemsList items={filteredProducts ? filteredProducts : products} sellers={sellers}/>
+                <ItemsList items={filteredProducts || products} sellers={sellers}/>
               </>
             }/>
           </Switch>
