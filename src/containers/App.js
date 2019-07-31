@@ -5,9 +5,10 @@ import { urlProducts, urlSellers } from '../globals.js';
 
 import ItemsList from '../components/ItemsList';
 import FilterBar from '../components/FilterBar';
+import SortBar from '../components/SortBar.js';
 
 import { AppContextProvider } from '../context/AppContext';
-import SortBar from '../components/SortBar.js';
+import { initialItems, itemsToAdd, scrollMargin } from '../globals';
 
 class App extends Component {
   state = {
@@ -19,19 +20,24 @@ class App extends Component {
     favorites: JSON.parse(localStorage.getItem('avito-favorites')) || [],
     filters: {
       category: 'all',
-      price: {
-        from: 'all',
-        to: 'all'
-      },
+      price: { from: 'all', to: 'all' },
       isFavorite: false
     },
-    sorting: 'popularity'
+    sorting: 'popularity',
+    productsToShow: initialItems
+  }
+  fetchData(url) {
+    return axios.get(url)
+      .then(res => {
+        if (res.status !== 200) throw new Error('Network error');
+        return res.data;
+      })
   }
   setFilter = filter => {
     this.setState({
-      filters: Object.assign({}, this.state.filters, {
+      filters: { ...this.state.filters, ...{
         [filter.name] : filter.value
-      })
+      }}
     });
   }
   setSorting = sorting => {
@@ -48,13 +54,6 @@ class App extends Component {
     favorites.splice(index, 1);
     this.setState({ favorites });
   }
-  fetchData(url) {
-    return axios.get(url)
-      .then(res => {
-        if (res.status !== 200) throw new Error('Network error');
-        return res.data;
-      })
-  }
   filterProducts() {
     const { filters, products, favorites } = this.state;
     const { category, price: { from, to }, isFavorite } = filters;
@@ -63,7 +62,7 @@ class App extends Component {
       if ((category === 'all' || item.category === category) &&
           (from === 'all' || item.price >= from) &&
           (to === 'all' || item.price < to) && 
-          (isFavorite && favorites.find(fav => fav.id === item.id) || !isFavorite)) {
+          (!isFavorite || favorites.find(fav => fav.id === item.id))) {
         return item;
       }
       return false;
@@ -73,29 +72,29 @@ class App extends Component {
   sortProducts() {
     const { sorting, products } = this.state;
     let sortedProducts = products.slice(0);
-    sortedProducts.sort((a, b) => {
-      return sorting === 'price' ? a.price - b.price : a.id - b.id;
-    });
-    this.setState({
-      products: sortedProducts
-    });
+    sortedProducts.sort((a, b) => 
+      sorting === 'price' ? a.price - b.price : a.id - b.id
+    );
+    this.setState({ products: sortedProducts });
+  }
+  scrollHandler = e => {
+    let target = e.target.documentElement;
+    if (target.clientHeight + target.scrollTop >= target.scrollHeight - scrollMargin) {
+      this.setState({
+        productsToShow: this.state.productsToShow + itemsToAdd
+      });
+    }
   }
   componentDidMount() {
+    window.addEventListener('scroll', this.scrollHandler);
     const fetchProducts = this.fetchData(urlProducts);
     const fetchSellers = this.fetchData(urlSellers);
     Promise.all([fetchProducts, fetchSellers])
       .then(res => {
-        this.setState({
-          loading: false,
-          products: res[0].data,
-          sellers: res[1].data
-        });
+        this.setState({ loading: false, products: res[0].data, sellers: res[1].data });
       })
       .catch(error => {
-        this.setState({
-          loading: false,
-          error: true
-        });
+        this.setState({ loading: false, error: true });
         console.log(error);
       });
   }
@@ -113,10 +112,7 @@ class App extends Component {
     }
   }
   render() {
-    const { 
-      products, sellers, loading, 
-      error, filteredProducts, favorites 
-    } = this.state;
+    const { products, sellers, loading, error, filteredProducts, favorites } = this.state;
     const filterContext = {
       setFilter: this.setFilter,
       setSorting: this.setSorting
@@ -140,8 +136,16 @@ class App extends Component {
                 <AppContextProvider value={favoritesContext}>
                   <ItemsList 
                     items={filteredProducts || products} 
+                    itemsToShow={this.state.productsToShow}
                     sellers={sellers} favorites={favorites}
                   />
+                </AppContextProvider>
+              </>
+            }/>
+            <Route path='/favorites' render={() => 
+              <>
+                <AppContextProvider value={favoritesContext}>
+                  <ItemsList items={favorites} sellers={sellers}/>
                 </AppContextProvider>
               </>
             }/>
