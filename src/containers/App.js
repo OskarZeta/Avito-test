@@ -23,7 +23,7 @@ class App extends Component {
         from: 'all',
         to: 'all'
       },
-      favorites: 'all'
+      isFavorite: false
     },
     sorting: 'popularity'
   }
@@ -56,13 +56,14 @@ class App extends Component {
       })
   }
   filterProducts() {
-    const { filters, products } = this.state;
-    const { category, price: { from, to } } = filters;
+    const { filters, products, favorites } = this.state;
+    const { category, price: { from, to }, isFavorite } = filters;
     let filteredProducts = products.slice(0);
     filteredProducts = filteredProducts.filter(item => { 
       if ((category === 'all' || item.category === category) &&
           (from === 'all' || item.price >= from) &&
-          (to === 'all' || item.price < to)) {
+          (to === 'all' || item.price < to) && 
+          (isFavorite && favorites.find(fav => fav.id === item.id) || !isFavorite)) {
         return item;
       }
       return false;
@@ -99,7 +100,7 @@ class App extends Component {
       });
   }
   componentDidUpdate(_, prevState) {
-    const { products, filters, sorting, favorites } = this.state;
+    const { products, filteredProducts, filters, sorting, favorites } = this.state;
     if (prevState.filters !== filters || prevState.products !== products) {
       this.filterProducts();
     }
@@ -108,6 +109,7 @@ class App extends Component {
     }
     if (prevState.favorites !== favorites) {
       localStorage.setItem('avito-favorites', JSON.stringify(favorites));
+      if (filteredProducts) this.filterProducts();
     }
   }
   render() {
