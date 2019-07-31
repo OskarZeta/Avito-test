@@ -145,7 +145,10 @@ class App extends Component {
             <Route path='/favorites' render={() => 
               <>
                 <AppContextProvider value={favoritesContext}>
-                  <ItemsList items={favorites} sellers={sellers}/>
+                  <ItemsList 
+                    items={favorites} sellers={sellers}  
+                    itemsToShow={this.state.productsToShow}
+                  />
                 </AppContextProvider>
               </>
             }/>
