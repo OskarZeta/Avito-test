@@ -16,6 +16,7 @@ class App extends Component {
     products: [],
     filteredProducts: null,
     sellers: [],
+    favorites: JSON.parse(localStorage.getItem('avito-favorites')) || [],
     filters: {
       category: 'all',
       price: {
@@ -35,6 +36,17 @@ class App extends Component {
   }
   setSorting = sorting => {
     this.setState({ sorting });
+  }
+  addFavorite = item => {
+    let favorites = this.state.favorites.slice(0);
+    favorites.push(item);
+    this.setState({ favorites });
+  }
+  removeFavorite = item => {
+    let favorites = this.state.favorites.slice(0);
+    let index = favorites.findIndex(fav => fav.id === item.id);
+    favorites.splice(index, 1);
+    this.setState({ favorites });
   }
   fetchData(url) {
     return axios.get(url)
@@ -87,20 +99,30 @@ class App extends Component {
       });
   }
   componentDidUpdate(_, prevState) {
-    const { products, filters, sorting } = this.state;
+    const { products, filters, sorting, favorites } = this.state;
     if (prevState.filters !== filters || prevState.products !== products) {
       this.filterProducts();
     }
     if (prevState.sorting !== sorting) {
       this.sortProducts();
     }
+    if (prevState.favorites !== favorites) {
+      localStorage.setItem('avito-favorites', JSON.stringify(favorites));
+    }
   }
   render() {
-    const { products, sellers, loading, error, filteredProducts } = this.state;
+    const { 
+      products, sellers, loading, 
+      error, filteredProducts, favorites 
+    } = this.state;
     const filterContext = {
       setFilter: this.setFilter,
       setSorting: this.setSorting
     };
+    const favoritesContext = {
+      addFavorite: this.addFavorite,
+      removeFavorite: this.removeFavorite
+    }
     return (
       <div className="App">
         {loading && !error && <div>Loading...</div>}
@@ -113,7 +135,12 @@ class App extends Component {
                   <FilterBar />
                   <SortBar />
                 </AppContextProvider>
-                <ItemsList items={filteredProducts || products} sellers={sellers}/>
+                <AppContextProvider value={favoritesContext}>
+                  <ItemsList 
+                    items={filteredProducts || products} 
+                    sellers={sellers} favorites={favorites}
+                  />
+                </AppContextProvider>
               </>
             }/>
           </Switch>
