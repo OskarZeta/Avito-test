@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 
-import ItemsList from '../components/ItemsList';
-import Header from '../components/Header';
-import Content from '../components/Content';
-import HeaderFavorites from '../components/HeaderFavorites';
+import ErrorComponent from '../components/ErrorComponent';
+import Loading from '../components/Loading';
+import Layout from '../components/layouts/Layout';
+import LayoutFavorites from '../components/layouts/LayoutFavorites';
 
-import { AppContextProvider } from '../context/AppContext';
 import { initialItems, itemsToAdd, scrollMargin, urlProducts, urlSellers } from '../globals';
 
 class App extends Component {
@@ -33,14 +32,6 @@ class App extends Component {
         return res.data;
       })
   }
-  setFilter = filter => {
-    this.setState({
-      filters: { ...this.state.filters, ...{
-        [filter.name] : filter.value
-      }}
-    });
-  }
-  setSorting = sorting => this.setState({ sorting })
   addFavorite = item => {
     let favorites = this.state.favorites.slice(0);
     favorites.push(item);
@@ -66,7 +57,9 @@ class App extends Component {
       }
       return false;
     });
-    this.setState({ filteredProducts, productsToShow: initialItems });
+    this.setState({ 
+      filteredProducts
+    }, () => this.setProductsToShow(initialItems));
   }
   sortProducts() {
     const { sorting, products } = this.state;
@@ -76,25 +69,36 @@ class App extends Component {
       let priceB = b.price || 0;
       return sorting === 'price' ? priceA - priceB : a.id - b.id;
     });
-    this.setState({ products: sortedProducts, productsToShow: initialItems });
+    this.setState({ 
+      products: sortedProducts 
+    }, () => this.setProductsToShow(initialItems));
   }
   scrollHandler = e => {
     const { clientHeight, scrollTop, scrollHeight } = e.target.documentElement;
     if ((clientHeight + scrollTop >= scrollHeight - scrollMargin) &&
         (this.state.productsToShow < this.state.products.length )) {
-      this.setState({ productsToShow: this.state.productsToShow + itemsToAdd });
+      this.setProductsToShow(this.state.productsToShow + itemsToAdd);
     }
   }
+  setTitle(title) { 
+    document.title = title; 
+  }
+  setProductsToShow = value => this.setState({ productsToShow: value })
+  setSorting = sorting => this.setState({ sorting })
+  setFilter = filter => 
+    this.setState({
+      filters: { ...this.state.filters, ...{
+        [filter.name] : filter.value
+      }}
+    })
+
   componentDidMount() {
     window.addEventListener('scroll', this.scrollHandler);
     const fetchProducts = this.fetchData(urlProducts);
     const fetchSellers = this.fetchData(urlSellers);
     Promise.all([fetchProducts, fetchSellers])
       .then(res => this.setState({ loading: false, products: res[0].data, sellers: res[1].data }))
-      .catch(error => {
-        this.setState({ loading: false, error: true });
-        console.log(error);
-      });
+      .catch(error => this.setState({ loading: false, error }));
   }
   componentDidUpdate(_, prevState) {
     const { products, filteredProducts, filters, sorting, favorites } = this.state;
@@ -111,45 +115,42 @@ class App extends Component {
     }
   }
   render() {
-    const { products, sellers, loading, error, filteredProducts, favorites, productsToShow, sorting, filters } = this.state;
-    const { setFilter, setSorting } = { ...this };
-    const { addFavorite, removeFavorite } = { ...this };
+    const { 
+      products, sellers, loading, error, filteredProducts, 
+      favorites, productsToShow, sorting, filters 
+    } = this.state;
+    const { setFilter, setSorting, addFavorite, removeFavorite, setProductsToShow } = { ...this };
     return (
       <>
-        {loading && !error && <div>Loading...</div>}
-        {error && <div>ERROR</div>}
+        {loading && !error && <Loading/>}
+        {error && <ErrorComponent error={error}/>}
         {!loading && !error && 
           <Switch>
-            <Route exact path='/' render={() => 
-              <>
-                <AppContextProvider value={{setFilter, setSorting, sorting, filters}}>
-                  <Header/>
-                </AppContextProvider>
-                <AppContextProvider value={{addFavorite, removeFavorite}}>
-                  <Content>
-                    <ItemsList 
-                      items={filteredProducts || products} 
-                      itemsToShow={productsToShow}
-                      sellers={sellers} favorites={favorites}
-                    />
-                  </Content>
-                </AppContextProvider>
-              </>
-            }/>
-            <Route path='/favorites' render={() => 
-              <>
-                <HeaderFavorites/>
-                <AppContextProvider value={{addFavorite, removeFavorite}}>
-                  <Content>
-                    <ItemsList 
-                      items={favorites} 
-                      itemsToShow={productsToShow}
-                      sellers={sellers} 
-                    />
-                  </Content>
-                </AppContextProvider>
-              </>
-            }/>
+            <Route exact path='/' render={() => {
+              this.setTitle("Avito test");
+              return (
+                <Layout 
+                  filterContext={{setFilter, setSorting, sorting, filters}} 
+                  favoritesContext={{addFavorite, removeFavorite}}
+                  items={filteredProducts || products} itemsToShow={productsToShow}
+                  sellers={sellers} favorites={favorites} setProductsToShow={setProductsToShow}
+                />
+              );
+            }}/>
+            <Route path='/favorites' render={() => {
+              this.setTitle("Favorites");
+              return (
+                <LayoutFavorites 
+                  favoritesContext={{addFavorite, removeFavorite}}
+                  items={favorites} itemsToShow={productsToShow}
+                  sellers={sellers} setProductsToShow={setProductsToShow}
+                />
+              );
+            }}/>
+            <Route render={() => {
+              this.setTitle("404");
+              return(<ErrorComponent error={"page not found"}/>);
+            }}/>
           </Switch>
         }
       </>
