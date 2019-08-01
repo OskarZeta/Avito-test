@@ -14,8 +14,12 @@ function renderItems(data, limit) {
 }
 
 const ItemsList = ({ items, sellers, favorites, itemsToShow }) => 
-  <ul className="content__items-list">
-    {renderItems({ items, sellers, favorites }, itemsToShow)}
-  </ul>
-
+  <>
+    {items.length > 0 ?
+      <ul className="content__items-list">
+        {renderItems({ items, sellers, favorites }, itemsToShow)}
+      </ul> :
+      <div className="content__items-empty">Ничего не найдено</div>
+    }
+  </>
 export default ItemsList;

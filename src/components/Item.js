@@ -1,5 +1,5 @@
 import React from 'react';
-import FavoritesBtn from '../containers/FavoritesBtn';
+import FavoritesBtn from './FavoritesBtn';
 import { AppContextConsumer } from '../context/AppContext';
 
 function parsePrice(price) {

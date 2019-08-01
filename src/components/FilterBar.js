@@ -5,7 +5,7 @@ import PriceFilter from '../containers/PriceFilter';
 import FavoritesFilter from '../containers/FavoritesFilter';
 
 const FilterBar = () => 
-  <form className="form form--filter">
+  <form className="form my-2">
     <h5>Фильтры</h5>
     <div>
       <div>

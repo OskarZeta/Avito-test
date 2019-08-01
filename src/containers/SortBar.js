@@ -3,7 +3,7 @@ import AppContext from '../context/AppContext';
 
 class SortBar extends Component {
   state = {
-    sort_by: 'popularity'
+    sort_by: this.context.sorting
   }
   changeHandler = e => {
     this.setState({
@@ -13,7 +13,7 @@ class SortBar extends Component {
   render() {
     const sort_by = this.state.sort_by;
     return(
-      <form className="form form--sort">
+      <form className="form">
         <h5>Сортировка (по возрастанию)</h5>
         <div>
           <label>
