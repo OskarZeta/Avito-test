@@ -18,7 +18,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "homepage": "https://oskarzeta.github.io/Avito",
+  "homepage": "https://oskarzeta.github.io/Avito-test",
   "browserslist": {
     "production": [
       ">0.2%",
