@@ -13,11 +13,9 @@ function renderItems(data, limit) {
   });
 }
 
-const ItemsList = ({ items, sellers, favorites, itemsToShow }) => {
-  return(
-    <ul className="content__items-list">
-      {renderItems({ items, sellers, favorites }, itemsToShow)}
-    </ul>
-  );
-}
+const ItemsList = ({ items, sellers, favorites, itemsToShow }) => 
+  <ul className="content__items-list">
+    {renderItems({ items, sellers, favorites }, itemsToShow)}
+  </ul>
+
 export default ItemsList;

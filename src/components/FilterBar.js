@@ -4,21 +4,23 @@ import CategoryFilter from '../containers/CategoryFilter';
 import PriceFilter from '../containers/PriceFilter';
 import FavoritesFilter from '../containers/FavoritesFilter';
 
-const FilterBar = (props) => 
-  <form>
-    <div>Filter</div>
-    <label>
-      <span>by category</span>
-      <CategoryFilter/>
-    </label>
-    <label>
-      <span>by price</span>
-      <PriceFilter/>
-    </label>
-    <label>
-      <span>by favorites</span>
-      <FavoritesFilter/>
-    </label>
+const FilterBar = () => 
+  <form className="form form--filter">
+    <h5>Фильтры</h5>
+    <div>
+      <div>
+        <span>Категория</span>
+        <CategoryFilter/>
+      </div>
+      <div>
+        <span>Цена</span>
+        <PriceFilter/>
+      </div>
+      <div>
+        <span>Избранное</span>
+        <FavoritesFilter/>
+      </div>
+    </div>
   </form>
 
 export default FilterBar;

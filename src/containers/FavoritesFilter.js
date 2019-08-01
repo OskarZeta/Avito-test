@@ -19,17 +19,19 @@ class FavoritesFilter extends Component {
       <div>
         <label>
           <input 
+            className="form__input-radio"
             type="radio" name="favorites" value={0} 
             checked={!isFavorite} onChange={this.changeHandler}
           />
-          <span>all</span>
+          <span className="form__custom-input-radio">Все продукты</span>
         </label>
         <label>         
           <input 
+            className="form__input-radio"
             type="radio" name="favorites" value={1} 
             checked={isFavorite} onChange={this.changeHandler}
           />
-          <span>favorites</span>
+          <span className="form__custom-input-radio">Только избранное</span>
         </label>
       </div>
     );

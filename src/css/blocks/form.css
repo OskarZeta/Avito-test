@@ -1,0 +1,23 @@
+.form--filter {
+  margin: 10px 0;
+}
+.form--sort {
+  margin-bottom: 20px;
+}
+.form__input-radio {
+  display: none;
+}
+.form__custom-input-radio {
+  display: block;
+  padding: 2px 15px;
+  color: black;
+  background: #f8f9fa;
+  cursor: pointer;
+}
+.form__input-radio:checked + .form__custom-input-radio {
+  color: white;
+  background: #6c757d;
+}
+.form__input-number {
+  padding: 5px 10px;
+}

@@ -13,22 +13,26 @@ class SortBar extends Component {
   render() {
     const sort_by = this.state.sort_by;
     return(
-      <form>
-        <div>Sort</div>
-        <label>
-          <input 
-            type="radio" name="sorting" value="popularity"
-            checked={sort_by === 'popularity'} onChange={this.changeHandler}
-          />
-          <span>by popularity</span>
-        </label>
-        <label>
-          <input 
-            type="radio" name="sorting" value="price"
-            checked={sort_by === 'price'} onChange={this.changeHandler}
-          />
-          <span>by price (asc)</span>
-        </label>
+      <form className="form form--sort">
+        <h5>Сортировка (по возрастанию)</h5>
+        <div>
+          <label>
+            <input 
+              className="form__input-radio"
+              type="radio" name="sorting" value="popularity"
+              checked={sort_by === 'popularity'} onChange={this.changeHandler}
+            />
+            <span className="form__custom-input-radio">Популярность</span>
+          </label>
+          <label>
+            <input 
+              className="form__input-radio"
+              type="radio" name="sorting" value="price"
+              checked={sort_by === 'price'} onChange={this.changeHandler}
+            />
+            <span className="form__custom-input-radio">Цена</span>
+          </label>
+        </div>
       </form>
     );
   }

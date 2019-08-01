@@ -19,38 +19,43 @@ class CategoryFilter extends Component {
       <div>
         <label>
           <input 
+            className="form__input-radio"
             type="radio" name="category" value="all" 
             checked={category === 'all'} onChange={this.changeHandler}
           />
-          <span>all</span>
+          <span className="form__custom-input-radio">Все</span>
         </label>
         <label>         
           <input 
+            className="form__input-radio"
             type="radio" name="category" value="immovable" 
             checked={category === 'immovable'} onChange={this.changeHandler}
           />
-          <span>immovable</span>
+          <span className="form__custom-input-radio">Недвижимость</span>
         </label>
         <label>         
           <input 
+            className="form__input-radio"
             type="radio" name="category" value="cameras" 
             checked={category === 'cameras'} onChange={this.changeHandler}
           />
-          <span>cameras</span>
+          <span className="form__custom-input-radio">Фотоаппараты</span>
         </label>
         <label>
           <input 
+            className="form__input-radio"
             type="radio" name="category" value="auto" 
             checked={category === 'auto'} onChange={this.changeHandler}
           />
-          <span>auto</span>
+          <span className="form__custom-input-radio">Автомобили</span>
         </label>
         <label>       
           <input 
+            className="form__input-radio"
             type="radio" name="category" value="laptops" 
             checked={category === 'laptops'} onChange={this.changeHandler}
           />
-          <span>laptops</span>
+          <span className="form__custom-input-radio">Ноутбуки</span>
         </label>
       </div>
     );

@@ -1,4 +1,10 @@
 .content__items-list {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
+}
+@media (min-width: 300px) {
+  .content__items-list {
+    flex-direction: row;
+  }
 }

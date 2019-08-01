@@ -4,8 +4,9 @@ import axios from 'axios';
 import { urlProducts, urlSellers } from '../globals.js'; 
 
 import ItemsList from '../components/ItemsList';
-import FilterBar from '../components/FilterBar';
-import SortBar from '../components/SortBar.js';
+import Header from '../components/Header';
+import Content from '../components/Content';
+import HeaderFavorites from '../components/HeaderFavorites';
 
 import { AppContextProvider } from '../context/AppContext';
 import { initialItems, itemsToAdd, scrollMargin } from '../globals';
@@ -40,9 +41,7 @@ class App extends Component {
       }}
     });
   }
-  setSorting = sorting => {
-    this.setState({ sorting });
-  }
+  setSorting = sorting => this.setState({ sorting })
   addFavorite = item => {
     let favorites = this.state.favorites.slice(0);
     favorites.push(item);
@@ -80,9 +79,7 @@ class App extends Component {
   scrollHandler = e => {
     let target = e.target.documentElement;
     if (target.clientHeight + target.scrollTop >= target.scrollHeight - scrollMargin) {
-      this.setState({
-        productsToShow: this.state.productsToShow + itemsToAdd
-      });
+      this.setState({ productsToShow: this.state.productsToShow + itemsToAdd });
     }
   }
   componentDidMount() {
@@ -90,9 +87,7 @@ class App extends Component {
     const fetchProducts = this.fetchData(urlProducts);
     const fetchSellers = this.fetchData(urlSellers);
     Promise.all([fetchProducts, fetchSellers])
-      .then(res => {
-        this.setState({ loading: false, products: res[0].data, sellers: res[1].data });
-      })
+      .then(res => this.setState({ loading: false, products: res[0].data, sellers: res[1].data }))
       .catch(error => {
         this.setState({ loading: false, error: true });
         console.log(error);
@@ -112,43 +107,42 @@ class App extends Component {
     }
   }
   render() {
-    const { products, sellers, loading, error, filteredProducts, favorites } = this.state;
-    const filterContext = {
-      setFilter: this.setFilter,
-      setSorting: this.setSorting
-    };
-    const favoritesContext = {
-      addFavorite: this.addFavorite,
-      removeFavorite: this.removeFavorite
-    }
+    const { products, sellers, loading, error, filteredProducts, favorites, productsToShow } = this.state;
+    const { setFilter, setSorting } = { ...this };
+    const { addFavorite, removeFavorite } = { ...this };
     return (
-      <div className="App">
+      <div className="app">
         {loading && !error && <div>Loading...</div>}
         {error && <div>ERROR</div>}
         {!loading && !error && 
           <Switch>
             <Route exact path='/' render={() => 
               <>
-                <AppContextProvider value={filterContext}>
-                  <FilterBar />
-                  <SortBar />
+                <AppContextProvider value={{setFilter, setSorting}}>
+                  <Header/>
                 </AppContextProvider>
-                <AppContextProvider value={favoritesContext}>
-                  <ItemsList 
-                    items={filteredProducts || products} 
-                    itemsToShow={this.state.productsToShow}
-                    sellers={sellers} favorites={favorites}
-                  />
+                <AppContextProvider value={{addFavorite, removeFavorite}}>
+                  <Content>
+                    <ItemsList 
+                      items={filteredProducts || products} 
+                      itemsToShow={productsToShow}
+                      sellers={sellers} favorites={favorites}
+                    />
+                  </Content>
                 </AppContextProvider>
               </>
             }/>
             <Route path='/favorites' render={() => 
               <>
-                <AppContextProvider value={favoritesContext}>
-                  <ItemsList 
-                    items={favorites} sellers={sellers}  
-                    itemsToShow={this.state.productsToShow}
-                  />
+                <HeaderFavorites/>
+                <AppContextProvider value={{addFavorite, removeFavorite}}>
+                  <Content>
+                    <ItemsList 
+                      items={favorites} 
+                      itemsToShow={productsToShow}
+                      sellers={sellers} 
+                    />
+                  </Content>
                 </AppContextProvider>
               </>
             }/>

@@ -20,15 +20,17 @@ class PriceFilter extends Component {
     return(
       <div>
         <label>
-          <span>from</span>
           <input 
+            className="form__input-number"
             type="number" id="from" name="price" onChange={this.changeHandler}
+            placeholder="Цена от"
           />
         </label>
         <label>
-          <span>to</span>
           <input 
+            className="form__input-number"
             type="number" id="to" name="price" onChange={this.changeHandler}
+            placeholder="до, руб."
           />
         </label>
       </div>

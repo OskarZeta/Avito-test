@@ -1,22 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { ReactComponent as Icon } from '../css/fav.svg';
 
-import AppContext from '../context/AppContext';
-
-class FavoritesBtn extends Component {
-  render() {
-    const { isFavorite, data } = this.props;
-    const { addFavorite, removeFavorite } = this.context;
-    return(
-      <button 
-        type="button"
-        onClick={isFavorite ? () => removeFavorite(data) : () => addFavorite(data)}
-      >
-        {isFavorite ? "Remove from favorites" : "Add to favorites"}
-      </button>
-    );
-  }
-}
-
-FavoritesBtn.contextType = AppContext;
+const FavoritesBtn = ({isFavorite, data, context: { addFavorite, removeFavorite }}) => 
+  <button 
+    type="button" className="item__fav-btn"
+    onClick={isFavorite ? () => removeFavorite(data) : () => addFavorite(data)}
+  >
+    <Icon 
+      fill={isFavorite ? "red" : "white"} fillRule="evenodd" 
+      stroke={isFavorite ? "darkred" : "grey"} className="item__fav-icon"
+    />
+  </button>
 
 export default FavoritesBtn;
