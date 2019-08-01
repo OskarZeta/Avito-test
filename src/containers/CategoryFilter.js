@@ -3,7 +3,7 @@ import AppContext from '../context/AppContext';
 
 class CategoryFilter extends Component {
   state = {
-    category: 'all'
+    category: this.context.filters.category
   }
   changeHandler = e => {
     this.setState({

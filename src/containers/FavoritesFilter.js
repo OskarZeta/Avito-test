@@ -3,7 +3,7 @@ import AppContext from '../context/AppContext';
 
 class FavoritesFilter extends Component {
   state = {
-    isFavorite: false
+    isFavorite: this.context.filters.isFavorite
   }
   changeHandler = e => {
     this.setState({

@@ -3,8 +3,8 @@ import AppContext from '../context/AppContext';
 
 class PriceFilter extends Component {
   state = {
-    from: 'all',
-    to: 'all'
+    from: this.context.filters.price.from,
+    to: this.context.filters.price.to
   }
   changeHandler = e => {
     let { value, id } = e.target;
@@ -17,18 +17,19 @@ class PriceFilter extends Component {
     }));
   }
   render() {
+    const {from, to} = this.state;
     return(
       <div>
         <label>
           <input 
-            className="form__input-number"
+            className="form__input-number" value={from === 'all' ? '' : from}
             type="number" id="from" name="price" onChange={this.changeHandler}
             placeholder="Цена от"
           />
         </label>
         <label>
           <input 
-            className="form__input-number"
+            className="form__input-number" value={to === 'all' ? '' : to}
             type="number" id="to" name="price" onChange={this.changeHandler}
             placeholder="до, руб."
           />
