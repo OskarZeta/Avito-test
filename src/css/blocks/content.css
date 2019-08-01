@@ -3,7 +3,11 @@
   flex-direction: column;
   flex-wrap: wrap;
 }
-@media (min-width: 300px) {
+.content__items-empty {
+  font-size: 20px;
+  opacity: 0.7;
+}
+@media (min-width: 500px) {
   .content__items-list {
     flex-direction: row;
   }

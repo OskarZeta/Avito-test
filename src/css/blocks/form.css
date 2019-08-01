@@ -1,9 +1,3 @@
-.form--filter {
-  margin: 10px 0;
-}
-.form--sort {
-  margin-bottom: 20px;
-}
 .form__input-radio {
   display: none;
 }
@@ -13,10 +7,18 @@
   color: black;
   background: #f8f9fa;
   cursor: pointer;
+  transition: 0.15s;
+}
+.form__custom-input-radio:hover {
+  background: #e2e2e4;
 }
 .form__input-radio:checked + .form__custom-input-radio {
   color: white;
   background: #6c757d;
+  transition: 0.15s;
+}
+.form__input-radio:checked:hover + .form__custom-input-radio {
+  background: #858f97;
 }
 .form__input-number {
   padding: 5px 10px;
