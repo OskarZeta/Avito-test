@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import axios from 'axios';
-import { urlProducts, urlSellers } from '../globals.js'; 
 
 import ItemsList from '../components/ItemsList';
 import Header from '../components/Header';
@@ -9,7 +8,7 @@ import Content from '../components/Content';
 import HeaderFavorites from '../components/HeaderFavorites';
 
 import { AppContextProvider } from '../context/AppContext';
-import { initialItems, itemsToAdd, scrollMargin } from '../globals';
+import { initialItems, itemsToAdd, scrollMargin, urlProducts, urlSellers } from '../globals';
 
 class App extends Component {
   state = {
@@ -67,7 +66,7 @@ class App extends Component {
       }
       return false;
     });
-    this.setState({ filteredProducts });
+    this.setState({ filteredProducts, productsToShow: initialItems });
   }
   sortProducts() {
     const { sorting, products } = this.state;
@@ -77,11 +76,12 @@ class App extends Component {
       let priceB = b.price || 0;
       return sorting === 'price' ? priceA - priceB : a.id - b.id;
     });
-    this.setState({ products: sortedProducts });
+    this.setState({ products: sortedProducts, productsToShow: initialItems });
   }
   scrollHandler = e => {
-    let target = e.target.documentElement;
-    if (target.clientHeight + target.scrollTop >= target.scrollHeight - scrollMargin) {
+    const { clientHeight, scrollTop, scrollHeight } = e.target.documentElement;
+    if ((clientHeight + scrollTop >= scrollHeight - scrollMargin) &&
+        (this.state.productsToShow < this.state.products.length )) {
       this.setState({ productsToShow: this.state.productsToShow + itemsToAdd });
     }
   }
@@ -111,18 +111,18 @@ class App extends Component {
     }
   }
   render() {
-    const { products, sellers, loading, error, filteredProducts, favorites, productsToShow } = this.state;
+    const { products, sellers, loading, error, filteredProducts, favorites, productsToShow, sorting, filters } = this.state;
     const { setFilter, setSorting } = { ...this };
     const { addFavorite, removeFavorite } = { ...this };
     return (
-      <div className="app">
+      <>
         {loading && !error && <div>Loading...</div>}
         {error && <div>ERROR</div>}
         {!loading && !error && 
           <Switch>
             <Route exact path='/' render={() => 
               <>
-                <AppContextProvider value={{setFilter, setSorting}}>
+                <AppContextProvider value={{setFilter, setSorting, sorting, filters}}>
                   <Header/>
                 </AppContextProvider>
                 <AppContextProvider value={{addFavorite, removeFavorite}}>
@@ -152,7 +152,7 @@ class App extends Component {
             }/>
           </Switch>
         }
-      </div>
+      </>
     );
   }
 }
