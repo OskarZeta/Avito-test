@@ -57,10 +57,11 @@ class App extends Component {
     const { filters, products, favorites } = this.state;
     const { category, price: { from, to }, isFavorite } = filters;
     let filteredProducts = products.slice(0);
-    filteredProducts = filteredProducts.filter(item => { 
+    filteredProducts = filteredProducts.filter(item => {
+      let price = item.price || 0;
       if ((category === 'all' || item.category === category) &&
-          (from === 'all' || item.price >= from) &&
-          (to === 'all' || item.price < to) && 
+          (from === 'all' || price >= from) &&
+          (to === 'all' || price < to) && 
           (!isFavorite || favorites.find(fav => fav.id === item.id))) {
         return item;
       }
@@ -71,9 +72,11 @@ class App extends Component {
   sortProducts() {
     const { sorting, products } = this.state;
     let sortedProducts = products.slice(0);
-    sortedProducts.sort((a, b) => 
-      sorting === 'price' ? a.price - b.price : a.id - b.id
-    );
+    sortedProducts.sort((a, b) => {
+      let priceA = a.price || 0;
+      let priceB = b.price || 0;
+      return sorting === 'price' ? priceA - priceB : a.id - b.id;
+    });
     this.setState({ products: sortedProducts });
   }
   scrollHandler = e => {
@@ -95,7 +98,8 @@ class App extends Component {
   }
   componentDidUpdate(_, prevState) {
     const { products, filteredProducts, filters, sorting, favorites } = this.state;
-    if (prevState.filters !== filters || prevState.products !== products) {
+    if (prevState.filters !== filters || 
+       (prevState.products !== products && prevState.products.length)) {
       this.filterProducts();
     }
     if (prevState.sorting !== sorting) {
