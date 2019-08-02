@@ -9,8 +9,16 @@
 .item__header {
   margin-top: 10px;
 }
-.item__img {
+.item__img-container {
+  position: relative;
   width: 100%;
+  background: #f8f9fa;
+  padding-bottom: 100%;
+}
+.item__img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 .item__fav-btn {
   border: none;

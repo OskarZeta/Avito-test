@@ -13,7 +13,9 @@ const Item = ({ data }) => {
   return(
     <li className="item">
       <div>
-        <img className="border item__img" src={'https:' + pictures[0]} alt={title}/>
+        <div className="item__img-container">
+          <img className="border item__img" src={'https:' + pictures[0]} alt={title}/>
+        </div>
         <h5 className="item__header">{title}</h5>
       </div>
       {price ? 
