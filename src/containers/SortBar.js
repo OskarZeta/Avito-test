@@ -3,35 +3,76 @@ import AppContext from '../context/AppContext';
 
 class SortBar extends Component {
   state = {
-    sort_by: this.context.sorting
+    value: this.context.sorting.value,
+    direction: this.context.sorting.direction
   }
   changeHandler = e => {
+    const {name, value} = e.target;
     this.setState({
-      sort_by: e.target.value
-    }, () => this.context.setSorting(this.state.sort_by));
+      [name] : value
+    }, () => this.context.setSorting(this.state));
   }
   render() {
-    const sort_by = this.state.sort_by;
+    const { value, direction } = this.state;
     return(
       <form className="form">
-        <h5>Сортировка (по возрастанию)</h5>
-        <div>
-          <label>
-            <input 
-              className="form__input-radio"
-              type="radio" name="sorting" value="popularity"
-              checked={sort_by === 'popularity'} onChange={this.changeHandler}
-            />
-            <span className="form__custom-input-radio">Популярность</span>
-          </label>
-          <label>
-            <input 
-              className="form__input-radio"
-              type="radio" name="sorting" value="price"
-              checked={sort_by === 'price'} onChange={this.changeHandler}
-            />
-            <span className="form__custom-input-radio">Цена</span>
-          </label>
+        <div className="form__wrapper-sort">
+          <div>
+            <h5>Сортировка</h5>
+            <div className="mr-5">
+              <label>
+                <input 
+                  className="form__input-radio"
+                  type="radio" name="value" value="default"
+                  checked={value === 'default'} onChange={this.changeHandler}
+                />
+                <span className="form__custom-input-radio">Номер товара</span>
+              </label>
+              <label>
+                <input 
+                  className="form__input-radio"
+                  type="radio" name="value" value="rating"
+                  checked={value === 'rating'} onChange={this.changeHandler}
+                />
+                <span className="form__custom-input-radio">Рейтинг продавца</span>
+              </label>
+              <label>
+                <input 
+                  className="form__input-radio"
+                  type="radio" name="value" value="price"
+                  checked={value === 'price'} onChange={this.changeHandler}
+                />
+                <span className="form__custom-input-radio">Цена</span>
+              </label>
+            </div>
+          </div>
+          <div>
+            <h5>Направление сортировки</h5>
+            <div>
+              <label>
+                <input 
+                  className="form__input-radio"
+                  type="radio" name="direction" value="asc"
+                  checked={direction === 'asc'} onChange={this.changeHandler}
+                />
+                <span className="form__custom-input-radio">
+                  <span className="hidden__mobile">Возрастание</span>
+                  <span className="hidden__desktop hidden-tablet">▲</span>
+                </span>
+              </label>
+              <label>
+                <input 
+                  className="form__input-radio"
+                  type="radio" name="direction" value="desc"
+                  checked={direction === 'desc'} onChange={this.changeHandler}
+                />
+                <span className="form__custom-input-radio">
+                  <span className="hidden__mobile">Убывание</span>
+                  <span className="hidden__desktop hidden-tablet">▼</span> 
+                </span>
+              </label>
+            </div>
+          </div>
         </div>
       </form>
     );

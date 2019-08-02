@@ -1,0 +1,11 @@
+.hidden__mobile {
+  display: none;
+}
+@media (min-width: 768px) {
+  .hidden__tablet, .hidden__desktop {
+    display: none;
+  }
+  .hidden__mobile {
+    display: block;
+  }
+}

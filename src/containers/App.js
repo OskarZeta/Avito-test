@@ -22,7 +22,10 @@ class App extends Component {
       price: { from: 'all', to: 'all' },
       isFavorite: false
     },
-    sorting: 'popularity',
+    sorting: {
+      value: 'default',
+      direction: 'asc'
+    },
     productsToShow: initialItems
   }
   fetchData(url) {
@@ -62,12 +65,25 @@ class App extends Component {
     }, () => this.setProductsToShow(initialItems));
   }
   sortProducts() {
-    const { sorting, products } = this.state;
+    const { sorting: {value, direction}, products, sellers } = this.state;
     let sortedProducts = products.slice(0);
     sortedProducts.sort((a, b) => {
-      let priceA = a.price || 0;
-      let priceB = b.price || 0;
-      return sorting === 'price' ? priceA - priceB : a.id - b.id;
+      switch (value) {
+        case 'price' : {
+          let priceA = a.price || 0;
+          let priceB = b.price || 0;
+          return direction === 'asc' ? priceA - priceB : priceB - priceA;
+        }
+        case 'rating' : {
+          let sellerA = sellers.find(person => person.id === a.relationships.seller);
+          let sellerB = sellers.find(person => person.id === b.relationships.seller);
+          return direction === 'asc' ? sellerA.rating - sellerB.rating : sellerB.rating - sellerA.rating;
+        }
+        case 'default' :
+        default : {
+          return direction === 'asc' ?  a.id - b.id : b.id - a.id;
+        }
+      }
     });
     this.setState({ 
       products: sortedProducts 
