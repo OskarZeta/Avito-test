@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/Avito-test/static/css/main.0df70927.chunk.css",
-    "main.js": "/Avito-test/static/js/main.35034c32.chunk.js",
-    "main.js.map": "/Avito-test/static/js/main.35034c32.chunk.js.map",
+    "main.css": "/Avito-test/static/css/main.22509e9c.chunk.css",
+    "main.js": "/Avito-test/static/js/main.a86c5e24.chunk.js",
+    "main.js.map": "/Avito-test/static/js/main.a86c5e24.chunk.js.map",
     "runtime~main.js": "/Avito-test/static/js/runtime~main.65958801.js",
     "runtime~main.js.map": "/Avito-test/static/js/runtime~main.65958801.js.map",
-    "static/js/2.4f3d4bfc.chunk.js": "/Avito-test/static/js/2.4f3d4bfc.chunk.js",
-    "static/js/2.4f3d4bfc.chunk.js.map": "/Avito-test/static/js/2.4f3d4bfc.chunk.js.map",
+    "static/js/2.1f1f925b.chunk.js": "/Avito-test/static/js/2.1f1f925b.chunk.js",
+    "static/js/2.1f1f925b.chunk.js.map": "/Avito-test/static/js/2.1f1f925b.chunk.js.map",
     "index.html": "/Avito-test/index.html",
-    "precache-manifest.aab1a6ce3e86d5a6c72b83ea99d5f836.js": "/Avito-test/precache-manifest.aab1a6ce3e86d5a6c72b83ea99d5f836.js",
+    "precache-manifest.6975775d69ae60ff95a4788ea18e78e8.js": "/Avito-test/precache-manifest.6975775d69ae60ff95a4788ea18e78e8.js",
     "service-worker.js": "/Avito-test/service-worker.js",
-    "static/css/main.0df70927.chunk.css.map": "/Avito-test/static/css/main.0df70927.chunk.css.map",
+    "static/css/main.22509e9c.chunk.css.map": "/Avito-test/static/css/main.22509e9c.chunk.css.map",
     "static/media/fav.7b25cbcd.svg": "/Avito-test/static/media/fav.7b25cbcd.svg"
   }
 }
