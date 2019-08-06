@@ -1,3 +1,6 @@
+Тестовое задание для Авито. Технологии - react, react-router, axios. Сконфигурированные webpack, babel, скрипты для дев-сервера/сборки проекта - create react app.
+Онлайн-версия приложения - https://oskarzeta.github.io/Avito-test/
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
