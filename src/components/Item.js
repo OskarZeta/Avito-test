@@ -15,6 +15,11 @@ const Item = ({ data }) => {
       <div>
         <div className="item__img-container">
           <img className="border item__img" src={'https:' + pictures[0]} alt={title}/>
+          {pictures.length > 0 && 
+            <div className="item__img-counter">
+              <span>{pictures.length - 1}</span>
+            </div>
+          }
         </div>
         <h5 className="item__header">{title}</h5>
       </div>
